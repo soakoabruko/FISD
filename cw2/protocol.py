@@ -13,7 +13,7 @@ def rect_exact(sock: socket.socket, size: int) -> bytes:
         chunk = sock.recv(size - len(data))
 
         if not chunk:
-            raise ConnectionError("Connection closed before all data was received")
+            raise ConnectionResetError("Connection closed before all data was received.")
 
         data.extend(chunk)
 
@@ -21,7 +21,7 @@ def rect_exact(sock: socket.socket, size: int) -> bytes:
 
 
 def send_message(sock: socket.socket, command: str, payload: bytes) -> None:
-    command_bytes = command.encode("utf-8")
+    command_bytes = command.encode()
     length = len(payload)
     header = struct.pack("!4sI", command_bytes, length)
     sock.sendall(header + payload)
@@ -32,13 +32,14 @@ def recv_message(sock: socket.socket) -> tuple[str, bytes] | None:
         header = rect_exact(sock, 8)
 
         command_bytes, length = struct.unpack("!4sI", header)
-        command = command_bytes.decode("utf-8").strip()
+        command = command_bytes.decode().strip()
 
         if length > MAX_MESSAGE_SIZE:
-            payload = rect_exact(sock, MAX_MESSAGE_SIZE)
-        else:
-            payload = rect_exact(sock, length)
+            raise ValueError("Message too large")
+
+        payload = rect_exact(sock, length)
 
         return command, payload
-    except ConnectionError:
+
+    except (ConnectionResetError, OSError):
         return None
