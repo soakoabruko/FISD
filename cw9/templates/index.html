@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block page_title %}Главная — Книга рецептов{% endblock %}
+
+{% block content %}
+    <form method="GET" action="{{ url_for('index') }}">
+        <input 
+            type="text" 
+            name="search_query" 
+            placeholder="Поиск по названию" 
+            value="{{ search_query|default('') }}"
+        >
+
+        <select name="category">
+            {% for category_item in category_lst|default([]) %}
+                <option
+                    value="{{ category_item }}"
+                    {% if category|default('Все') == category_item %}
+                        selected
+                    {% endif %}
+                >
+                    {{ category_item }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <select name="sort">
+            {% for sort_item in sort_lst|default([]) %}
+                <option
+                    value="{{ sort_item }}"
+                    {% if sort|default('Новые') == sort_item %}
+                        selected
+                    {% endif %}
+                >
+                    {{ sort_item }}
+                </option>
+            {% endfor %}
+        </select>
+        
+        <button type="submit">Найти</button>
+    </form>
+
+    <h2>Список рецептов ({{ recipes|default([])|length }})</h2>
+
+    {% if recipes %}
+        <ul>
+            <hr>
+
+            {% for recipe in recipes %}
+                <li>
+                    <h3>
+                        {% if recipe.id %}
+                            <a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}">{{ recipe.title|default('—') }}</a>
+                        {% else %}
+                            <span>{{ recipe.title|default('—') }}</span>
+                        {% endif %}
+                    </h3>
+
+                    <p><strong>Категория:</strong> {{ recipe.category|default('—') }} | <strong>Время приготовления:</strong> {{ recipe.cook_time|default('—') }} мин.</p>
+                    
+                    <p><strong>Ингредиентов:</strong> {{ recipe.ingredients|default([])|length }} шт.</p>
+                </li>
+
+                <hr>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Рецепты не указаны.</p>
+    {% endif %}
+{% endblock %}

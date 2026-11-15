@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block page_title %}{{ recipe.title|default('—') }} — Книга рецептов{% endblock %}
+
+{% block content %}
+    <h2>{{ recipe.title|default('—') }}</h2>
+
+    <p><strong>Категория:</strong> {{ recipe.category|default('—') }} | <strong>Время приготовления:</strong> {{ recipe.cook_time|default('—') }} мин.</p>
+
+    <hr>
+
+    <h3>Ингредиенты:</h3>
+    {% if recipe.ingredients %}
+        <ul>
+            {% for ingredient in recipe.ingredients %}
+                <li>{{ ingredient.name|default('—') }} — {{ ingredient.amount|default('—') }} {{ ingredient.unit|default('—') }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Ингредиенты не указаны.</p>
+    {% endif %}
+
+    <h3>Пошаговый рецепт:</h3>
+
+    {% if recipe.steps %}
+        <ol>
+            {% for step in recipe.steps %}
+                <li>
+                    <p>{{ step.desc|default('—') }}</p>
+                    
+                    {% if step.image_url %}    
+                        <img src="{{ step.image_url }}" alt="Фото шага" width="300">
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <p>Шаги приготовления не указаны.</p>
+    {% endif %}
+    
+    {% if recipe.id %}
+        <form
+            method="GET"
+            action="{{ url_for('edit_recipe', recipe_id=recipe.id) }}"
+        >
+            <button type="submit">Редактировать</button>
+        </form>
+
+        <form
+            method="POST"
+            action="{{ url_for('delete_recipe', recipe_id=recipe.id) }}"
+        >
+            <button type="submit">Удалить</button>
+        </form>
+    {% endif %}
+{% endblock %}

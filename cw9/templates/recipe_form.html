@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>{% block form_title %}{% endblock %}</h2>
+
+    {% for error in errors|default([]) %}
+        <p style="color: red;"><strong>Ошибка:</strong> {{error}}</p>
+    {% endfor %}
+
+    <form
+        method="POST"
+        action="{% block action %}{% endblock %}"
+    >
+        <p>
+            <label for="title"><strong>Название блюда *:</strong></label><br>
+
+            <input
+                type="text"
+                id="title"
+                name="title"
+                value="{{ recipe_form_data.get('title', '') }}"
+                size="40"
+                required
+            >
+        </p>
+
+        <p>
+            <label for="category"><strong>Категория *:</strong></label><br>
+
+            <select
+                id="category"
+                name="category"
+            >
+                {% for category_item in category_lst|default([]) %}
+                    <option
+                        value="{{ category_item }}"
+                        {% if recipe_form_data.get('category', 'Завтрак') == category_item %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ category_item }}
+                    </option>
+                {% endfor %}
+            </select>
+        </p>
+
+        <p>
+            <label for="cook_time"><strong>Время приготовления (мин.) *:</strong></label><br>
+
+            <input
+                type="number"
+                id="cook_time"
+                name="cook_time"
+                min="1"
+                value="{{ recipe_form_data.get('cook_time', '') }}"
+                required
+            >
+        </p>
+
+        <hr>
+
+        <h3>Ингредиенты *</h3>
+
+        <div id="ingredients-list">
+            {% for ingredient in recipe_form_data.get('ingredients', []) or [{}] %}
+                <div class="ingredient-row">
+                    <input
+                        type="text"
+                        name="ingredient_name[]"
+                        placeholder="Название ингредиента *"
+                        value="{{ ingredient.get('name', '') }}"
+                        required
+                    >
+
+                    <input
+                        type="number"
+                        name="ingredient_amount[]"
+                        step="0.01"
+                        min="0.01"
+                        placeholder="Кол-во ингредиента *"
+                        value="{{ ingredient.get('amount', '') }}"
+                        required
+                    >
+                    
+                    <select name="ingredient_unit[]">
+                        {% for unit_item in unit_lst|default([]) %}
+                            <option
+                                value="{{ unit_item }}"
+                                {% if ingredient.get('unit', 'г') == unit_item %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ unit_item }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <button
+                        type="button"
+                        onclick="removeRow(this)"
+                    >
+                        Удалить
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+
+        <button
+            type="button"
+            onclick="addIngredient()"
+        >
+            + Добавить ингредиент
+        </button>
+
+        <hr>
+
+        <h3>Шаги приготовления *</h3>
+
+        <div id="steps-list">
+            {% for step in recipe_form_data.get('steps', []) or [{}] %}
+                <div class="step-row">
+                    <input
+                        type="text"
+                        name="step_desc[]"
+                        placeholder="Описание шага *" 
+                        value="{{ step.get('desc', '') }}"
+                        required
+                    >
+
+                    <input
+                        type="url"
+                        name="step_image_url[]"
+                        placeholder="Ссылка на изображение"
+                        value="{{ step.get('image_url', '') }}"
+                    >
+
+                    <button
+                        type="button"
+                        onclick="removeRow(this)"
+                    >
+                        Удалить
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <button
+            type="button"
+            onclick="addStep()"
+        >
+            + Добавить шаг
+        </button>
+
+        <hr>
+
+        <button type="submit">Сохранить рецепт</button>
+    </form>
+
+    <script>
+        function clearRowFields(row) {
+            row.querySelectorAll('input').forEach(input => {
+                input.value = '';
+            });
+
+            row.querySelectorAll('select').forEach(select => {
+                select.selectedIndex = 0;
+            });
+        }
+
+        function addIngredient() {
+            const list = document.getElementById('ingredients-list');
+            const firstRow = list.querySelector('.ingredient-row');
+            const newRow = firstRow.cloneNode(true);
+            
+            clearRowFields(newRow);
+            list.appendChild(newRow);
+        }
+
+        function addStep() {
+            const list = document.getElementById('steps-list');
+            const firstRow = list.querySelector('.step-row');
+            const newRow = firstRow.cloneNode(true);
+            
+            clearRowFields(newRow);
+            list.appendChild(newRow);
+        }
+
+        function removeRow(button) {
+            const container = button.parentElement.parentElement;
+            if (container.children.length > 1) {
+                button.parentElement.remove();
+            }
+        }
+    </script>
+{% endblock %}

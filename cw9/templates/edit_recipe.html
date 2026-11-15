@@ -1,0 +1,7 @@
+{% extends "recipe_form.html" %}
+
+{% block page_title %}Редактировать рецепт — Книга рецептов{% endblock %}
+
+{% block form_title %}Редактировать рецепт{% endblock %}
+
+{% block action %}{{ url_for('edit_recipe', recipe_id=recipe_id) }}{% endblock %}

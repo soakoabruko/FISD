@@ -1,0 +1,141 @@
+:root {
+    --bg: #faf3e8;
+    --surface: #fff8ef;
+    --surface-alt: #f3e6d3;
+    --border: #e0cdb4;
+    --text: #4a3b2a;
+    --accent: #c9822f;
+    --accent-hover: #b06f22;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0 auto;
+    padding: 0 1.5rem 3rem;
+    max-width: 900px;
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: Georgia, "Times New Roman", serif;
+    line-height: 1.6;
+}
+
+header {
+    padding-top: 1.5rem;
+}
+
+header h1 {
+    color: var(--accent);
+    margin: 0 0 0.5rem;
+}
+
+nav a {
+    color: var(--accent);
+    margin-right: 0.5rem;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 1rem 0;
+}
+
+h2 {
+    color: var(--accent);
+}
+
+a {
+    color: var(--accent);
+}
+
+a:hover {
+    color: var(--accent-hover);
+}
+
+ul,
+ol {
+    padding-left: 1.5rem;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="url"],
+select {
+    font-family: Verdana, sans-serif;
+    font-size: 0.9rem;
+    color: var(--text);
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.4rem 0.5rem;
+    margin: 0.2rem 0.3rem 0.2rem 0;
+}
+
+input:focus,
+select:focus {
+    border-color: var(--accent);
+    outline: none;
+}
+
+label {
+    display: inline-block;
+    margin-top: 0.5rem;
+}
+
+button {
+    font-family: Verdana, sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    background-color: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 0.45rem 0.9rem;
+    margin: 0.2rem 0.3rem 0.2rem 0;
+}
+
+button:hover {
+    background-color: var(--accent-hover);
+}
+
+form {
+    margin-bottom: 1rem;
+}
+
+.ingredient-row,
+.step-row {
+    padding: 0.4rem 0;
+}
+
+.ingredient-row input[type="text"],
+.step-row input[type="text"],
+.step-row input[type="url"] {
+    min-width: 200px;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 0 0.75rem 2rem;
+    }
+
+    .ingredient-row input,
+    .ingredient-row select,
+    .step-row input,
+    .step-row button,
+    .ingredient-row button {
+        width: 100%;
+        margin-right: 0;
+    }
+}
